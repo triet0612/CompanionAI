@@ -1,0 +1,77 @@
+basePath: /api/v1
+definitions:
+  model.APIError:
+    properties:
+      error_code:
+        type: string
+      message:
+        type: string
+    type: object
+  v1.login.body:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
+  v1.register.body:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
+info:
+  contact: {}
+  title: API Documentation
+  version: "1.0"
+paths:
+  /login:
+    post:
+      parameters:
+      - description: body
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/v1.login.body'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.APIError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.APIError'
+      summary: get jwt, return in header and cookie
+      tags:
+      - Authentication
+  /register:
+    post:
+      parameters:
+      - description: body
+        in: body
+        name: body
+        schema:
+          $ref: '#/definitions/v1.register.body'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.APIError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.APIError'
+      summary: get jwt, return in header and cookie
+      tags:
+      - Authentication
+swagger: "2.0"

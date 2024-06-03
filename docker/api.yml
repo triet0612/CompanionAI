@@ -1,0 +1,29 @@
+name:
+  companionai
+services:
+  db:
+    container_name: companion_db
+    image: postgres
+    env_file:
+      - .env
+    shm_size: 128mb
+    ports:
+      - "${DB_PORT}:5432"
+    environment:
+      POSTGRES_PASSWORD: "${DB_PASSWORD}"
+      PGDATA: /data/postgres
+      POSTGRES_DB: companionai
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready", "-d", "db_prod"]
+      interval: 10s
+      timeout: 60s
+      retries: 5
+      start_period: 0s
+  
+  adminer:
+    container_name: companion_adminer
+    image: adminer
+    env_file:
+      - .env
+    ports:
+      - "8080:8080"
