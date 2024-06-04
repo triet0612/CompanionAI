@@ -1,23 +1,24 @@
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 CREATE TABLE IF NOT EXISTS UserAccount (
-    ID uuid PRIMARY KEY,
+    UserID uuid PRIMARY KEY,
     Email varchar(256) NOT NULL UNIQUE,
     Password varchar(64) NOT NULL,
     CreationDate timestamp NOT NULL
 );
-CREATE TABLE IF NOT EXISTS ChatPair (
-    ChatID uuid NOT NULL,
-    PairID uuid NOT NULL,
-    Request text NOT NULL,
-    Response text NOT NULL,
+CREATE TABLE IF NOT EXISTS QA (
+    StoryID uuid NOT NULL,
+    QAID uuid NOT NULL,
+    Question text NOT NULL,
+    Answer text NOT NULL,
     Extension varchar(16),
     Attachment bytea,
-    PRIMARY KEY (ChatID, PairID)
+    PRIMARY KEY (StoryID, QAID)
 );
-CREATE TABLE IF NOT EXISTS Chat (
-    ChatID uuid PRIMARY KEY,
-    OwnerID uuid NOT NULL,
-    CreationDate timestamp NOT NULL
+CREATE TABLE IF NOT EXISTS Story (
+    StoryID uuid PRIMARY KEY,
+    UserID uuid NOT NULL,
+    CreationDate timestamp NOT NULL,
+    Context int[]
 );
 CREATE TABLE IF NOT EXISTS Config (
     ConfigKey text PRIMARY KEY,

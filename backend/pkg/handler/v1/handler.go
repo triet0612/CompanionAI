@@ -43,22 +43,24 @@ func (h *Handler) Mount(g *echo.Group) {
 	g.POST("/login", h.login)
 	g.POST("/register", h.register)
 
-	g.POST("/new_chat", h.createChat)
-	g.GET("/chat", h.chatRequest)
+	g.GET("/story", h.getAllStory)
+	g.GET("/story/:id", h.getStoryDetail)
+	g.POST("/story", h.createStory)
+	g.POST("/story/:id", h.createQA)
 }
 
 // @Summary      get jwt, return in header and cookie
 // @Tags         Authentication
 // @Produce      json
-// @Param 		 body		body 		v1.login.body	false	"body"
+// @Param 		 body		body 		v1.login.body	true	"body"
 // @Failure		 200		{object}	nil
 // @Failure		 400		{object}	model.APIError
 // @Failure		 404		{object}	model.APIError
 // @Router       /login		[post]
 func (h *Handler) login(c echo.Context) error {
 	type body struct {
-		Email    string `json:"email"`
-		Password string `json:"password"`
+		Email    string `json:"email" example:"abc@gmail.com"`
+		Password string `json:"password" example:"refo"`
 	}
 	var u body
 	if err := c.Bind(&u); err != nil {
@@ -74,7 +76,7 @@ func (h *Handler) login(c echo.Context) error {
 		})
 	}
 	row := h.db.QueryRow(context.Background(),
-		"SELECT ID, (Password=crypt($1, Password)) AS Matched FROM UserAccount WHERE Email = $2",
+		"SELECT UserID, (Password=crypt($1, Password)) AS Matched FROM UserAccount WHERE Email = $2",
 		u.Password, u.Email,
 	)
 	var userID string
@@ -130,10 +132,10 @@ func (h *Handler) login(c echo.Context) error {
 	return c.JSON(http.StatusOK, nil)
 }
 
-// @Summary      get jwt, return in header and cookie
+// @Summary      create new account, login after success
 // @Tags         Authentication
 // @Produce      json
-// @Param 		 body		body 		v1.register.body	false	"body"
+// @Param 		 body		body 		v1.register.body	true	"body"
 // @Failure		 200		{object}	nil
 // @Failure		 400		{object}	model.APIError
 // @Failure		 404		{object}	model.APIError

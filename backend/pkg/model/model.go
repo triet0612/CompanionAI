@@ -2,8 +2,6 @@ package model
 
 import (
 	"time"
-
-	"github.com/google/uuid"
 )
 
 type APIError struct {
@@ -11,23 +9,29 @@ type APIError struct {
 	Msg string `json:"message"`
 }
 
-type User struct {
-	ID       uuid.UUID
-	Email    string `json:"email"`
-	Password string `json:"password"`
+type UserAccount struct {
+	UserID       string
+	Email        string `json:"email"`
+	Password     string `json:"password"`
+	CreationDate time.Time
 }
 
-type ChatPair struct {
-	PairID     uuid.UUID `json:"pairid"`
-	Request    string    `json:"request"`
-	Response   string    `json:"response"`
-	Extension  string
-	Attachment []byte
+type QA struct {
+	QAID      string `json:"qa_id"`
+	Question  string `json:"question"`
+	Answer    string `json:"answer"`
+	Extension string `json:"extension"`
 }
 
-type Chat struct {
-	ChatID       uuid.UUID  `json:"chat_id"`
-	OwnerID      uuid.UUID  `json:"owner_id"`
-	CreationDate time.Time  `json:"creation_date"`
-	Content      []ChatPair `json:"content"`
+type Story struct {
+	StoryID      string    `json:"story_id"`
+	UserID       string    `json:"user_id"`
+	CreationDate time.Time `json:"creation_date"`
+	StoryContext []int     `json:"story_context"`
+	Content      []QA      `json:"content"`
+}
+
+type OllamaResponse struct {
+	Response string `json:"response"`
+	Context  []int  `json:"context"`
 }

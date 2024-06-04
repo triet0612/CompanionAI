@@ -27,6 +27,7 @@ func Init() *Config {
 		CORS_CONFIG:     corsConfig,
 		JWT_AUTH_METHOD: os.Getenv("JWT_AUTH_METHOD"),
 		JWT_SECRET:      sha512.New().Sum([]byte(time.Now().GoString())),
+		Dynamic:         map[string]string{},
 	}
 	return config
 }

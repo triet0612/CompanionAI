@@ -7,11 +7,41 @@ definitions:
       message:
         type: string
     type: object
+  model.QA:
+    properties:
+      answer:
+        type: string
+      extension:
+        type: string
+      qa_id:
+        type: string
+      question:
+        type: string
+    type: object
+  model.Story:
+    properties:
+      content:
+        items:
+          $ref: '#/definitions/model.QA'
+        type: array
+      creation_date:
+        type: string
+      story_context:
+        items:
+          type: integer
+        type: array
+      story_id:
+        type: string
+      user_id:
+        type: string
+    type: object
   v1.login.body:
     properties:
       email:
+        example: abc@gmail.com
         type: string
       password:
+        example: refo
         type: string
     type: object
   v1.register.body:
@@ -32,6 +62,7 @@ paths:
       - description: body
         in: body
         name: body
+        required: true
         schema:
           $ref: '#/definitions/v1.login.body'
       produces:
@@ -56,6 +87,7 @@ paths:
       - description: body
         in: body
         name: body
+        required: true
         schema:
           $ref: '#/definitions/v1.register.body'
       produces:
@@ -71,7 +103,111 @@ paths:
           description: Not Found
           schema:
             $ref: '#/definitions/model.APIError'
-      summary: get jwt, return in header and cookie
+      summary: create new account, login after success
       tags:
       - Authentication
+  /story:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Story'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.APIError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.APIError'
+      summary: create new story
+      tags:
+      - Story
+    post:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Story'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.APIError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.APIError'
+      summary: create new story
+      tags:
+      - Story
+  /story/{id}:
+    get:
+      parameters:
+      - description: story id
+        example: 51eecb74-bd12-40b4-bd3d-71eaa2a7d71b
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Story'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.APIError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.APIError'
+      summary: get story detail
+      tags:
+      - Story
+    post:
+      parameters:
+      - description: id
+        example: 51eecb74-bd12-40b4-bd3d-71eaa2a7d71b
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: question
+        example: What is a dog?
+        in: formData
+        name: question
+        required: true
+        type: string
+      - description: file
+        in: formData
+        name: attachment
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.QA'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.APIError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.APIError'
+      summary: create QA
+      tags:
+      - Story
 swagger: "2.0"

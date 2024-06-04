@@ -32,5 +32,16 @@ func Init(cfg *config.Config) *DBHelper {
 	if _, err := con.Exec(ctx, populate); err != nil {
 		log.Fatal(err)
 	}
+	row, err := con.Query(context.Background(), "SELECT ConfigKey, ConfigValue FROM Config")
+	if err != nil {
+		log.Fatal(err)
+	}
+	for row.Next() {
+		key, val := "", ""
+		if err := row.Scan(&key, &val); err != nil {
+			log.Fatal(err)
+		}
+		cfg.Dynamic[key] = val
+	}
 	return &DBHelper{Conn: con}
 }
