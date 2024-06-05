@@ -2,6 +2,7 @@ package middlewares
 
 import (
 	"fmt"
+	"net/http"
 	"strings"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -34,14 +35,21 @@ func (a *Middleware) AuthMiddleware() echo.MiddlewareFunc {
 
 	return echojwt.WithConfig(echojwt.Config{
 		Skipper: func(c echo.Context) bool {
-			return strings.Contains(c.Path(), "/login") ||
-				strings.Contains(c.Path(), "/register") ||
-				strings.Contains(c.Path(), "/docs/")
+			return strings.Contains(c.Path(), "login") ||
+				strings.Contains(c.Path(), "register") ||
+				strings.Contains(c.Path(), "docs") ||
+				strings.Contains(c.Path(), "assets")
 		},
 		SigningMethod: a.JWT_AUTH_METHOD,
 		SigningKey:    a.JWT_SECRET,
 		TokenLookup:   "cookie:jwt,header:Authorization:Bearer ",
 		NewClaimsFunc: NewClaim,
 		KeyFunc:       keyFunc,
+		ErrorHandler: func(c echo.Context, err error) error {
+			if c.Request().Header.Get("Content-Type") == "application/json" {
+				return err
+			}
+			return c.Redirect(http.StatusTemporaryRedirect, "/login")
+		},
 	})
 }

@@ -37,7 +37,9 @@ func Init(db *db.DBHelper, config *config.Config) *Handler {
 // @title		API Documentation
 // @version     1.0
 // @BasePath	/api/v1
-func (h *Handler) Mount(g *echo.Group) {
+func (h *Handler) Mount(e *echo.Echo) {
+	g := e.Group("/api/v1")
+
 	g.GET("/docs/*", echoSwagger.WrapHandler)
 
 	g.POST("/login", h.login)
@@ -61,8 +63,8 @@ func (h *Handler) Mount(g *echo.Group) {
 // @Router       /login		[post]
 func (h *Handler) login(c echo.Context) error {
 	type body struct {
-		Email    string `json:"email" example:"abc@gmail.com"`
-		Password string `json:"password" example:"refo"`
+		Email    string `json:"email" form:"email"  example:"abc@gmail.com"`
+		Password string `json:"password" form:"password"  example:"refo"`
 	}
 	var u body
 	if err := c.Bind(&u); err != nil {
@@ -129,9 +131,11 @@ func (h *Handler) login(c echo.Context) error {
 		Name:     "jwt",
 		Value:    tokenString,
 		Expires:  time.Now().Add(1000 * time.Hour),
+		Path:     "/",
 		HttpOnly: true,
 	})
-	return c.JSON(http.StatusOK, nil)
+	c.Response().Header().Set("HX-redirect", "/")
+	return c.JSON(http.StatusOK, "Ok")
 }
 
 // @Summary      create new account, login after success

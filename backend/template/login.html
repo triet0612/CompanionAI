@@ -1,0 +1,32 @@
+<html data-theme="retro">
+    <head>
+        <script src="/assets/htmx.min.js"></script>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.2/dist/full.min.css" rel="stylesheet" type="text/css" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    </head>
+    <body>
+        <div class="relative flex flex-col justify-center h-screen overflow-hidden">
+            <div class="w-full p-6 m-auto bg-base-300 rounded-md shadow-md lg:max-w-lg">
+                <form hx-post="/api/v1/login" hx-target="#message">
+                    <h1 class="text-3xl font-semibold text-center text-neutral">Login</h1>
+                    <div>
+                        <label class="label text-lg text-primary-content label-text" for="email">Email</label>
+                        <input bind:value={email} name="email" type="text" placeholder="Email Address" class="w-full input input-bordered input-primary" />
+                    </div>
+                    <div>
+                        <label class="label text-lg text-primary-content label-text" for="password">Password</label>
+                        <input bind:value={password} name="password" type="password" placeholder="Enter Password" class="w-full input input-bordered input-primary" />
+                    </div>
+                    <div>
+                        <a href="/register" class="label label-text text-base text-primary-content hover:underline hover:text-blue-600">Sign in?</a>
+                    </div>
+                    <div class="w-full flex flex-row">
+                        <button>Login</button>
+                    </div>
+                    <div id="message" class="text-error" hx-swap="innerHTML"></div>
+                </form>
+            </div>
+        </div>
+    </body>
+</html>

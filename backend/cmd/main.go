@@ -1,9 +1,9 @@
 package main
 
 import (
-	"CompanionBackend/pkg/api"
 	"CompanionBackend/pkg/config"
 	"CompanionBackend/pkg/db"
+	"CompanionBackend/pkg/server"
 )
 
 func main() {
@@ -14,6 +14,6 @@ func start() {
 	config := config.Init()
 	db := db.Init(config)
 
-	server := api.Init(db, config)
+	server := server.Init(db, config)
 	server.Run()
 }

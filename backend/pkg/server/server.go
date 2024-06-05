@@ -1,9 +1,11 @@
-package api
+package server
 
 import (
+	"CompanionBackend/assets"
 	"CompanionBackend/pkg/config"
 	"CompanionBackend/pkg/db"
 	v1 "CompanionBackend/pkg/handler/v1"
+	"CompanionBackend/pkg/handler/web"
 	"CompanionBackend/pkg/middlewares"
 
 	"github.com/labstack/echo/v4"
@@ -27,12 +29,13 @@ func Init(db *db.DBHelper, cfg *config.Config) *Server {
 		AllowCredentials: true,
 	}))
 	e.Use(middleware.Recover())
-
 	m := middlewares.Middleware{
 		JWT_SECRET:      cfg.JWT_SECRET,
 		JWT_AUTH_METHOD: cfg.JWT_AUTH_METHOD,
 	}
+
 	e.Use(m.AuthMiddleware())
+	e.StaticFS("/assets", assets.Assets)
 
 	return &Server{
 		cfg: cfg,
@@ -42,9 +45,11 @@ func Init(db *db.DBHelper, cfg *config.Config) *Server {
 }
 
 func (s *Server) Run() {
-	h := v1.Init(s.db, s.cfg)
+	apiHandler := v1.Init(s.db, s.cfg)
+	webHandler := web.Init(s.db, s.cfg)
 
-	h.Mount(s.e.Group("/api/v1"))
+	apiHandler.Mount(s.e)
+	webHandler.Mount(s.e)
 
 	s.e.Logger.Fatal(s.e.Start(":" + s.cfg.API_PORT))
 }
