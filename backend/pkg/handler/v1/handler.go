@@ -43,10 +43,12 @@ func (h *Handler) Mount(g *echo.Group) {
 	g.POST("/login", h.login)
 	g.POST("/register", h.register)
 
-	g.GET("/story", h.getAllStory)
-	g.GET("/story/:id", h.getStoryDetail)
+	g.GET("/story", h.getStoryList)
 	g.POST("/story", h.createStory)
-	g.POST("/story/:id", h.createQA)
+	g.GET("/story/:story_id", h.getStoryByStoryID)
+	g.POST("/story/:story_id", h.createStoryQA)
+	g.DELETE("/story/:story_id", h.deleteStoryByStoryID)
+	g.GET("/qa/image/:id", h.getImageByStoryID)
 }
 
 // @Summary      get jwt, return in header and cookie

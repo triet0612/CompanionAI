@@ -54,6 +54,46 @@ const docTemplate = `{
                 }
             }
         },
+        "/qa/image/{id}": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Story"
+                ],
+                "summary": "get qa image",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "qa_id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Story"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/model.APIError"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/model.APIError"
+                        }
+                    }
+                }
+            }
+        },
         "/register": {
             "post": {
                 "produces": [
@@ -101,7 +141,7 @@ const docTemplate = `{
                 "tags": [
                     "Story"
                 ],
-                "summary": "create new story",
+                "summary": "get story list",
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -156,7 +196,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/story/{id}": {
+        "/story/{story_id}": {
             "get": {
                 "produces": [
                     "application/json"
@@ -170,7 +210,7 @@ const docTemplate = `{
                         "type": "string",
                         "example": "51eecb74-bd12-40b4-bd3d-71eaa2a7d71b",
                         "description": "story id",
-                        "name": "id",
+                        "name": "story_id",
                         "in": "path",
                         "required": true
                     }
@@ -203,13 +243,13 @@ const docTemplate = `{
                 "tags": [
                     "Story"
                 ],
-                "summary": "create QA",
+                "summary": "get QA in a story",
                 "parameters": [
                     {
                         "type": "string",
                         "example": "51eecb74-bd12-40b4-bd3d-71eaa2a7d71b",
-                        "description": "id",
-                        "name": "id",
+                        "description": "story_id",
+                        "name": "story_id",
                         "in": "path",
                         "required": true
                     },
@@ -234,6 +274,42 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/model.QA"
                         }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/model.APIError"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/model.APIError"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Story"
+                ],
+                "summary": "delete story by story_id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "example": "51eecb74-bd12-40b4-bd3d-71eaa2a7d71b",
+                        "description": "story id",
+                        "name": "story_id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
                     },
                     "400": {
                         "description": "Bad Request",

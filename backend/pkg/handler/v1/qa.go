@@ -20,17 +20,17 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-// @Summary      create QA
+// @Summary      get QA in a story
 // @Tags         Story
 // @Produce      json
-// @Param 		 id				path		string	true	"id" 		example(51eecb74-bd12-40b4-bd3d-71eaa2a7d71b)
+// @Param 		 story_id		path		string	true	"story_id" 		example(51eecb74-bd12-40b4-bd3d-71eaa2a7d71b)
 // @Param 		 question		formData 	string	true	"question" 	example(What is a dog?)
 // @Param		 attachment		formData	file	false 	"file"
 // @Failure		 200		{object}	model.QA
 // @Failure		 400		{object}	model.APIError
 // @Failure		 404		{object}	model.APIError
-// @Router       /story/{id}	[post]
-func (h *Handler) createQA(c echo.Context) error {
+// @Router       /story/{story_id}	[post]
+func (h *Handler) createStoryQA(c echo.Context) error {
 	question := c.FormValue("question")
 	if question == "" {
 		return c.JSON(http.StatusBadRequest, model.APIError{
@@ -62,7 +62,7 @@ func (h *Handler) createQA(c echo.Context) error {
 	}
 	user := c.Get("user").(*jwt.Token).Claims.(*middlewares.CustomJWTClaims)
 	story := model.Story{
-		StoryID: c.Param("id"),
+		StoryID: c.Param("story_id"),
 		UserID:  user.UserID,
 	}
 	row := h.db.QueryRow(context.Background(),

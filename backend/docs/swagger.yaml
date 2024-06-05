@@ -81,6 +81,32 @@ paths:
       summary: get jwt, return in header and cookie
       tags:
       - Authentication
+  /qa/image/{id}:
+    get:
+      parameters:
+      - description: qa_id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Story'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.APIError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.APIError'
+      summary: get qa image
+      tags:
+      - Story
   /register:
     post:
       parameters:
@@ -125,7 +151,7 @@ paths:
           description: Not Found
           schema:
             $ref: '#/definitions/model.APIError'
-      summary: create new story
+      summary: get story list
       tags:
       - Story
     post:
@@ -147,13 +173,37 @@ paths:
       summary: create new story
       tags:
       - Story
-  /story/{id}:
+  /story/{story_id}:
+    delete:
+      parameters:
+      - description: story id
+        example: 51eecb74-bd12-40b4-bd3d-71eaa2a7d71b
+        in: path
+        name: story_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/model.APIError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/model.APIError'
+      summary: delete story by story_id
+      tags:
+      - Story
     get:
       parameters:
       - description: story id
         example: 51eecb74-bd12-40b4-bd3d-71eaa2a7d71b
         in: path
-        name: id
+        name: story_id
         required: true
         type: string
       produces:
@@ -176,10 +226,10 @@ paths:
       - Story
     post:
       parameters:
-      - description: id
+      - description: story_id
         example: 51eecb74-bd12-40b4-bd3d-71eaa2a7d71b
         in: path
-        name: id
+        name: story_id
         required: true
         type: string
       - description: question
@@ -207,7 +257,7 @@ paths:
           description: Not Found
           schema:
             $ref: '#/definitions/model.APIError'
-      summary: create QA
+      summary: get QA in a story
       tags:
       - Story
 swagger: "2.0"
