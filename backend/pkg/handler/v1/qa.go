@@ -23,7 +23,7 @@ import (
 // @Summary      get QA in a story
 // @Tags         Story
 // @Produce      json
-// @Param 		 story_id		path		string	true	"story_id" 		example(51eecb74-bd12-40b4-bd3d-71eaa2a7d71b)
+// @Param 		 story_id		path		string	true	"story_id" 	example(51eecb74-bd12-40b4-bd3d-71eaa2a7d71b)
 // @Param 		 question		formData 	string	true	"question" 	example(What is a dog?)
 // @Param		 attachment		formData	file	false 	"file"
 // @Failure		 200		{object}	model.QA
@@ -115,6 +115,10 @@ func (h *Handler) createStoryQA(c echo.Context) error {
 			Err: "prompt_error",
 			Msg: "unexpected server error",
 		})
+	}
+	if c.Request().Header.Get("Content-Type") == "text/html" {
+		c.Response().Header().Set("HX-Trigger", "qa-reload")
+		return c.HTML(http.StatusOK, "")
 	}
 	return c.JSON(http.StatusOK, ans)
 }

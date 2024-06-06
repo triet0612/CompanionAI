@@ -134,6 +134,8 @@ paths:
       - Authentication
   /story:
     get:
+      consumes:
+      - application/json
       produces:
       - application/json
       responses:
@@ -155,6 +157,8 @@ paths:
       tags:
       - Story
     post:
+      consumes:
+      - application/json
       produces:
       - application/json
       responses:

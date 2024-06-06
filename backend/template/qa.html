@@ -1,0 +1,29 @@
+<div class="h-screen w-5/6" id="story-info"
+    hx-get="/api/v1/story/{{ .StoryID }}"
+    hx-target="#story-info" hx-swap="outerHTML" hx-trigger="qa-reload from:body">
+    <div class="h-5/6 overflow-y-scroll">
+        {{range .Content}}
+        <div class="chat chat-end">
+            <div class="chat-bubble">
+                {{.Question}}
+            </div>
+            <div></div>
+        </div>
+        <div class="chat chat-start">
+            <div class="chat-bubble">
+                {{.Answer}}
+            </div>
+        </div>
+        {{end}}
+    </div>
+    <div class="h-1/6 p-4">
+        <form hx-post="/api/v1/story/{{ .StoryID }}" hx-target="#story-info" hx-swap="outerHTML">
+            <input type="text" placeholder="Type here" name="question"
+                class="input input-bordered input-primary w-full"/>
+            <div class="flex flex-row">
+                <input name="attachment" type="file" class="file-input w-full"/>
+                <button type="submit" class="btn btn-secondary">Send</button>
+            </div>
+        </form>
+    </div>
+</div>

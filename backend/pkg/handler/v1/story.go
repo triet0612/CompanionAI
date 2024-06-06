@@ -19,6 +19,7 @@ import (
 // @Summary      get story list
 // @Tags         Story
 // @Produce      json
+// @accept 		 json
 // @Failure		 200		{array}		model.Story
 // @Failure		 400		{object}	model.APIError
 // @Failure		 404		{object}	model.APIError
@@ -43,12 +44,16 @@ func (h *Handler) getStoryList(c echo.Context) error {
 		}
 		ans = append(ans, temp)
 	}
+	if c.Request().Header.Get("Content-Type") != "application/json" {
+		return c.Render(http.StatusOK, "story_list.html", ans)
+	}
 	return c.JSON(http.StatusOK, ans)
 }
 
 // @Summary      create new story
 // @Tags         Story
 // @Produce      json
+// @accept 		 json
 // @Failure		 200		{object}	model.Story
 // @Failure		 400		{object}	model.APIError
 // @Failure		 404		{object}	model.APIError
@@ -71,6 +76,10 @@ func (h *Handler) createStory(c echo.Context) error {
 			Err: "chat_error",
 			Msg: "unexpected server error",
 		})
+	}
+	if c.Request().Header.Get("Content-Type") != "application/json" {
+		c.Response().Header().Set("HX-Trigger", "story-list")
+		return c.HTML(http.StatusOK, "")
 	}
 	return c.JSON(http.StatusOK, ans)
 }
@@ -106,17 +115,17 @@ GROUP BY s.StoryID`,
 	)
 	ans := model.Story{}
 	if err := row.Scan(&ans.StoryID, &ans.UserID, &ans.CreationDate, &ans.StoryContext, &ans.Content); err != nil {
-		if errors.Is(err, pgx.ErrNoRows) {
-			return c.JSON(http.StatusNotFound, model.APIError{
+		if !errors.Is(err, pgx.ErrNoRows) {
+			log.Println(err)
+			return c.JSON(http.StatusInternalServerError, model.APIError{
 				Err: "pair_error",
-				Msg: "no chat found",
+				Msg: "unexpected server error",
 			})
 		}
-		log.Println(err)
-		return c.JSON(http.StatusInternalServerError, model.APIError{
-			Err: "pair_error",
-			Msg: "unexpected server error",
-		})
+	}
+	ans.StoryID = id
+	if c.Response().Header().Get("Content-Type") == "" {
+		return c.Render(http.StatusOK, "qa.html", ans)
 	}
 	return c.JSON(http.StatusOK, ans)
 }
@@ -183,7 +192,10 @@ func (h *Handler) deleteStoryByStoryID(c echo.Context) error {
 			Msg: "unexpected server error",
 		})
 	}
-	return c.JSON(http.StatusOK, nil)
+	if c.Request().Header.Get("Content-Type") != "application/json" {
+		return c.HTML(http.StatusOK, "")
+	}
+	return c.JSON(http.StatusOK, "")
 }
 
 // @Summary      get qa image

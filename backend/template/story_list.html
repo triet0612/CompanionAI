@@ -1,0 +1,14 @@
+<ul class="w-full">
+    {{ range . }}
+    <li class="flex flex-row w-full py-2 gap-2 justify-between" id="story">
+        <button hx-get="/api/v1/story/{{.StoryID}}" hx-target="#story-info" hx-swap="outerHTML"
+            class="btn btn-primary w-4/6 truncate justify-start">{{.StoryID}}</button>
+        <button  hx-target="closest #story" hx-swap="outerHTML"
+            class="btn btn-primary w-1/6" hx-delete="api/v1/story/{{.StoryID}}">
+            <span class="material-symbols-outlined">
+                delete
+            </span>
+        </button>
+    </li>
+    {{end}}
+</ul>
