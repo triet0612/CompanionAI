@@ -87,9 +87,6 @@ GROUP BY s.StoryID`,
 	sort.Slice(ans.Content, func(i, j int) bool {
 		return ans.Content[i].CreationDate.Before(ans.Content[j].CreationDate)
 	})
-	if c.QueryParam("component") == "true" {
-		return c.Render(http.StatusOK, "qa-component.html", ans)
-	}
 	return c.Render(http.StatusOK, "qa.html", ans)
 }
 

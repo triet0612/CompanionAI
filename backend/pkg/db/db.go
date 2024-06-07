@@ -6,11 +6,11 @@ import (
 	_ "embed"
 	"log"
 
-	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 type DBHelper struct {
-	*pgx.Conn
+	*pgxpool.Pool
 }
 
 //go:embed schema.sql
@@ -22,7 +22,7 @@ var populate string
 func Init(cfg *config.Config) *DBHelper {
 	ctx := context.Background()
 
-	con, err := pgx.Connect(ctx, cfg.DB_URL)
+	con, err := pgxpool.New(ctx, cfg.DB_URL)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -43,5 +43,5 @@ func Init(cfg *config.Config) *DBHelper {
 		}
 		cfg.Dynamic[key] = val
 	}
-	return &DBHelper{Conn: con}
+	return &DBHelper{Pool: con}
 }

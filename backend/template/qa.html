@@ -15,8 +15,7 @@
         </div>
     </div>
     <div class="h-screen w-5/6">
-        <div class="h-5/6 overflow-y-auto grow" id="scrolldiv" hx-get="/story/{{ .StoryID }}?component=true"
-        hx-target="#scrolldiv" hx-swap="outerHTML">
+        <div class="h-5/6 overflow-y-auto grow" id="scrolldiv">
             <ul id="qalist">
                 {{range .Content}}
                 <li>
@@ -40,8 +39,10 @@
         </div>
         <div class="h-1/6 p-4">
             <form hx-post="/story/{{ .StoryID }}" 
-                hx-encoding='multipart/form-data' 
-                hx-include="[name='attachment']" hx-target="#latest-chat" hx-swap="outerHTML">
+                hx-encoding='multipart/form-data'
+                hx-on:htmx:afterSwap="scrolltoBottom()"
+                hx-on:htmx:after-request="this.reset()"
+                hx-target="#latest-chat" hx-swap="outerHTML">
                 <input id="question" type="text" placeholder="Type here" name="question"
                     class="input input-bordered input-primary w-full"/>
                 <div class="flex flex-row">
@@ -61,23 +62,20 @@
         let objDiv = document.getElementById('scrolldiv');
         objDiv.scrollTop = objDiv.scrollHeight;
     }
-    htmx.on("htmx:afterSwap", function(evt) {
-        console.log("ok")
-        scrolltoBottom()
-    });
     function add() {
         let question = document.getElementById("question").value
-        let newElem = `<li id="latest-chat">
-<div class="chat chat-end">
-    <div class="chat-bubble">
-        ${question}
-    </div>
-</div>
-<div class="chat chat-start">
-    <div class="chat-bubble">
-    </div>
-</div>
-</li>`
+        let newElem = `
+        <li id="latest-chat">
+        <div class="chat chat-end">
+            <div class="chat-bubble">
+                ${question}
+            </div>
+        </div>
+        <div class="chat chat-start">
+            <div class="chat-bubble">
+            </div>
+        </div>
+        </li>`
         document.getElementById("qalist").insertAdjacentHTML('beforeend', newElem)
         scrolltoBottom()
     }
