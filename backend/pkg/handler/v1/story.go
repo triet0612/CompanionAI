@@ -44,6 +44,7 @@ func (h *Handler) getStoryList(c echo.Context) error {
 		}
 		ans = append(ans, temp)
 	}
+	slog.Info(c.Request().Header.Get("Content-Type"))
 	if c.Request().Header.Get("Content-Type") != "application/json" {
 		return c.Render(http.StatusOK, "story_list.html", ans)
 	}
@@ -107,7 +108,8 @@ json_agg(JSON_BUILD_OBJECT(
 	'qa_id', q.QAID,
 	'question', q.Question,
 	'answer', q.Answer,
-	'extension', q.Extension
+	'extension', q.Extension,
+	'creation_date', q.CreationDate
 )) as QA
 FROM QA q JOIN Story s ON q.StoryID = s.StoryID WHERE s.StoryID = $1 AND s.UserID = $2
 GROUP BY s.StoryID`,
@@ -191,9 +193,6 @@ func (h *Handler) deleteStoryByStoryID(c echo.Context) error {
 			Err: "delete_story_error",
 			Msg: "unexpected server error",
 		})
-	}
-	if c.Request().Header.Get("Content-Type") != "application/json" {
-		return c.HTML(http.StatusOK, "")
 	}
 	return c.JSON(http.StatusOK, "")
 }

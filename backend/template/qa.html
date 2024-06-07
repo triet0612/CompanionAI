@@ -1,29 +1,86 @@
-<div class="h-screen w-5/6" id="story-info"
-    hx-get="/api/v1/story/{{ .StoryID }}"
-    hx-target="#story-info" hx-swap="outerHTML" hx-trigger="qa-reload from:body">
-    <div class="h-5/6 overflow-y-scroll">
-        {{range .Content}}
-        <div class="chat chat-end">
-            <div class="chat-bubble">
-                {{.Question}}
+{{template "base" .}}
+{{define "body"}}
+<div class="flex flex-row">
+    <div class="h-screen justify-center md:w-1/6 sm:w-2/6">
+        <div class="h-full w-full bg-secondary pt-4 px-4 overflow-y-scroll">
+            <div class="flex w-full">
+                <button class="btn w-full mx-auto text-lg" hx-post="/story" hx-swap="none">
+                    <span class="material-symbols-outlined">
+                        add
+                    </span>
+                </button>
             </div>
-            <div></div>
-        </div>
-        <div class="chat chat-start">
-            <div class="chat-bubble">
-                {{.Answer}}
+            <div class="w-full" id="story_list" hx-get="/story" hx-trigger="story-list from:body, load">
             </div>
         </div>
-        {{end}}
     </div>
-    <div class="h-1/6 p-4">
-        <form hx-post="/api/v1/story/{{ .StoryID }}" hx-target="#story-info" hx-swap="outerHTML">
-            <input type="text" placeholder="Type here" name="question"
-                class="input input-bordered input-primary w-full"/>
-            <div class="flex flex-row">
-                <input name="attachment" type="file" class="file-input w-full"/>
-                <button type="submit" class="btn btn-secondary">Send</button>
-            </div>
-        </form>
+    <div class="h-screen w-5/6">
+        <div class="h-5/6 overflow-y-auto grow" id="scrolldiv" hx-get="/story/{{ .StoryID }}?component=true"
+        hx-target="#scrolldiv" hx-swap="outerHTML">
+            <ul id="qalist">
+                {{range .Content}}
+                <li>
+                    <div class="chat chat-end">
+                        <div class="chat-bubble">
+                            {{.Question}}
+                        </div>
+                    </div>
+                    <div class="chat chat-start">
+                        <div class="chat-bubble">
+                            {{.Answer}}
+                        </div>
+                    </div>
+                    {{if (eq .Extension "jpg" "png") }}
+                        <img class="h-72 px-5 object-fill" src="/api/v1/qa/image/{{.QAID}}" alt="image">
+                    {{else}}
+                    {{end}}
+                </li>
+                {{end}}
+            </ul>
+        </div>
+        <div class="h-1/6 p-4">
+            <form hx-post="/story/{{ .StoryID }}" 
+                hx-encoding='multipart/form-data' 
+                hx-include="[name='attachment']" hx-target="#latest-chat" hx-swap="outerHTML">
+                <input id="question" type="text" placeholder="Type here" name="question"
+                    class="input input-bordered input-primary w-full"/>
+                <div class="flex flex-row">
+                    <input name="attachment" type="file" class="file-input w-full"/>
+                    <button type="submit" class="btn btn-secondary" onclick="add()">Send</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
+{{end}}
+
+{{define "script"}}
+<script>
+    let objDiv = document.getElementById('scrolldiv');
+    function scrolltoBottom() {        
+        let objDiv = document.getElementById('scrolldiv');
+        objDiv.scrollTop = objDiv.scrollHeight;
+    }
+    htmx.on("htmx:afterSwap", function(evt) {
+        console.log("ok")
+        scrolltoBottom()
+    });
+    function add() {
+        let question = document.getElementById("question").value
+        let newElem = `<li id="latest-chat">
+<div class="chat chat-end">
+    <div class="chat-bubble">
+        ${question}
+    </div>
+</div>
+<div class="chat chat-start">
+    <div class="chat-bubble">
+    </div>
+</div>
+</li>`
+        document.getElementById("qalist").insertAdjacentHTML('beforeend', newElem)
+        scrolltoBottom()
+    }
+    scrolltoBottom()
+</script>
+{{end}}

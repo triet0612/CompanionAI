@@ -1,27 +1,21 @@
-<html data-theme="retro">
-    <head>
-        <script src="/assets/htmx.min.js"></script>
-        <script src="https://cdn.tailwindcss.com"></script>
-        <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.2/dist/full.min.css" rel="stylesheet" type="text/css" />
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
-    </head>
-    <body>
-        <div class="flex flex-row">
-            <div class="h-screen justify-center md:w-1/6 sm:w-2/6">
-                <div class="h-full w-full bg-secondary pt-4 px-4 overflow-y-scroll">
-                    <div class="flex w-full">
-                        <button class="btn w-full mx-auto text-lg" hx-post="/api/v1/story" hx-swap="none">
-                            <span class="material-symbols-outlined">
-                                add
-                            </span>
-                        </button>
-                    </div>
-                    <div class="w-full" id="story_list" hx-get="/api/v1/story" hx-trigger="story-list from:body, load">
-                    </div>
-                </div>
+{{template "base" .}}
+
+{{define "body"}}
+<div class="flex flex-row">
+    <div class="h-screen justify-center md:w-1/6 sm:w-2/6">
+        <div class="h-full w-full bg-secondary pt-4 px-4 overflow-y-scroll">
+            <div class="flex w-full">
+                <button class="btn w-full mx-auto text-lg" hx-post="/story">
+                    <span class="material-symbols-outlined">
+                        add
+                    </span>
+                </button>
             </div>
-            <div class="h-screen w-5/6" id="story-info">
+            <div class="w-full" id="story_list" hx-get="/story" hx-trigger="story-list from:body, load">
             </div>
         </div>
-    </body>
-</html>
+    </div>
+    <div class="h-screen w-5/6" id="story-info">
+    </div>
+</div>
+{{end}}

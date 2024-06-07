@@ -30,6 +30,8 @@ func (t *TemplateRenderer) Render(w io.Writer, name string, data interface{}, c 
 	if viewContext, isMap := data.(map[string]interface{}); isMap {
 		viewContext["reverse"] = c.Echo().Reverse
 	}
+	tmpl := template.Must(t.templates.Clone())
+	tmpl = template.Must(tmpl.ParseFS(Template, name))
 
-	return t.templates.ExecuteTemplate(w, name, data)
+	return tmpl.ExecuteTemplate(w, name, data)
 }

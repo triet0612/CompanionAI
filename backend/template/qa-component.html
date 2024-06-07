@@ -1,0 +1,23 @@
+<div class="h-5/6 overflow-y-auto grow" id="scrolldiv" hx-get="/story/{{ .StoryID }}?component=true"
+    hx-target="#scrolldiv" hx-swap="outerHTML">
+    <ul id="qalist">
+        {{range .Content}}
+        <li>
+            <div class="chat chat-end">
+                <div class="chat-bubble">
+                    {{.Question}}
+                </div>
+            </div>
+            <div class="chat chat-start">
+                <div class="chat-bubble">
+                    {{.Answer}}
+                </div>
+            </div>
+            {{if (eq .Extension "jpg" "png") }}
+                <img class="h-72 px-5 object-fill" src="/api/v1/qa/image/{{.QAID}}" alt="image">
+            {{else}}
+            {{end}}
+        </li>
+        {{end}}
+    </ul>
+</div>

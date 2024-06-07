@@ -351,6 +351,9 @@ const docTemplate = `{
                 "answer": {
                     "type": "string"
                 },
+                "creation_date": {
+                    "type": "string"
+                },
                 "extension": {
                     "type": "string"
                 },

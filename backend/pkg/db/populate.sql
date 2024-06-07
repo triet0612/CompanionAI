@@ -5,7 +5,7 @@ INSERT INTO UserAccount VALUES (
     current_timestamp
 ) ON CONFLICT DO NOTHING;
 INSERT INTO Config VALUES
-('text-text-model', 'phi3'),
+('text-text-model', 'llava-phi3'),
 ('image-text-model', 'llava-phi3') ON CONFLICT DO NOTHING;
 INSERT INTO Story VALUES (
     '51eecb74-bd12-40b4-bd3d-71eaa2a7d71b',

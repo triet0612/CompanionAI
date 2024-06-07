@@ -11,6 +11,8 @@ definitions:
     properties:
       answer:
         type: string
+      creation_date:
+        type: string
       extension:
         type: string
       qa_id:

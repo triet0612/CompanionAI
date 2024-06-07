@@ -17,10 +17,11 @@ type UserAccount struct {
 }
 
 type QA struct {
-	QAID      string `json:"qa_id"`
-	Question  string `json:"question"`
-	Answer    string `json:"answer"`
-	Extension string `json:"extension"`
+	QAID         string    `json:"qa_id"`
+	Question     string    `json:"question"`
+	Answer       string    `json:"answer"`
+	Extension    string    `json:"extension"`
+	CreationDate time.Time `json:"creation_date"`
 }
 
 type Story struct {

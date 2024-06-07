@@ -1,4 +1,4 @@
-package v1
+package web
 
 import (
 	"CompanionBackend/pkg/middlewares"
@@ -8,6 +8,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -20,16 +21,6 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-// @Summary      get QA in a story
-// @Tags         Story
-// @Produce      json
-// @Param 		 story_id		path		string	true	"story_id" 	example(51eecb74-bd12-40b4-bd3d-71eaa2a7d71b)
-// @Param 		 question		formData 	string	true	"question" 	example(What is a dog?)
-// @Param		 attachment		formData	file	false 	"file"
-// @Failure		 200		{object}	model.QA
-// @Failure		 400		{object}	model.APIError
-// @Failure		 404		{object}	model.APIError
-// @Router       /story/{story_id}	[post]
 func (h *Handler) createStoryQA(c echo.Context) error {
 	question := c.FormValue("question")
 	if question == "" {
@@ -127,11 +118,23 @@ func (h *Handler) createStoryQA(c echo.Context) error {
 			Msg: "unexpected server error",
 		})
 	}
-	if c.Request().Header.Get("Content-Type") == "text/html" {
-		c.Response().Header().Set("HX-Trigger", "qa-reload")
-		return c.HTML(http.StatusOK, "")
+	img := ""
+	if len(attachment) != 0 {
+		img = fmt.Sprintf(`<img class="h-72 px-5 object-fill" src="/api/v1/qa/image/%s" alt="image">`, ans.QAID)
 	}
-	return c.JSON(http.StatusOK, ans)
+	return c.HTML(http.StatusOK, fmt.Sprintf(`<li>
+	<div class="chat chat-end">
+		<div class="chat-bubble">
+			%s
+		</div>
+	</div>
+	<div class="chat chat-start">
+		<div class="chat-bubble">
+			%s
+		</div>
+	</div>
+	%s
+</li>`, ans.Question, ans.Answer, img))
 }
 
 func (h *Handler) ollamaGenerate(question string, extension string, chatContext []int, attachment []byte) (*model.OllamaResponse, error) {

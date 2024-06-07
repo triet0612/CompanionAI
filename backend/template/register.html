@@ -3,7 +3,7 @@
 <div hx-ext="response-targets"
   class="relative flex flex-col justify-center h-screen overflow-hidden">
   <div class="w-full p-6 m-auto bg-base-300 rounded-md shadow-md lg:max-w-lg">
-    <form hx-post="/login" hx-target="#message"
+    <form hx-post="/register" hx-target="#message"
       hx-target-400="#message" hx-swap="innerHTML">
       <h1 class="text-3xl font-semibold text-center text-neutral">Login</h1>
       <div>
@@ -18,13 +18,8 @@
         <label class="label text-lg text-primary-content label-text" for="password">Password</label>
         <input bind:value={password} name="password" type="password" placeholder="Enter Password" class="w-full input input-bordered input-primary" />
       </div>
-      <div>
-        <a href="/register" class="label label-text text-base text-primary-content hover:underline hover:text-blue-600">
-          Sign in?
-        </a>
-      </div>
       <div class="w-full flex flex-row">
-        <button class="btn btn-primary">Login</button>
+        <button class="btn btn-primary">Create account</button>
       </div>
       <div id="message" class="text-error"></div>
     </form>
