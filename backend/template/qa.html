@@ -4,13 +4,16 @@
     <div class="h-screen justify-center md:w-1/6 sm:w-2/6">
         <div class="h-full w-full bg-secondary pt-4 px-4 overflow-y-scroll">
             <div class="flex w-full">
-                <button class="btn w-full mx-auto text-lg" hx-post="/story" hx-swap="none">
-                    <span class="material-symbols-outlined">
-                        add
-                    </span>
-                </button>
+                <a class="flex w-full" href="/">
+                    <button class="btn btn-accent w-full mx-auto text-lg">
+                        <span class="material-symbols-outlined">
+                            Home
+                        </span>
+                        <span>Home</span>
+                    </button>
+                </a>
             </div>
-            <div class="w-full" id="story_list" hx-get="/story" hx-trigger="story-list from:body, load">
+            <div class="w-full" id="story_list" hx-get="/story" hx-trigger="load">
             </div>
         </div>
     </div>
