@@ -134,7 +134,6 @@ func (h *Handler) login(c echo.Context) error {
 		Path:     "/",
 		HttpOnly: true,
 	})
-	c.Response().Header().Set("HX-redirect", "/")
 	return c.JSON(http.StatusOK, "Ok")
 }
 

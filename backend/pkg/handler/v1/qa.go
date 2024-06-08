@@ -127,10 +127,6 @@ func (h *Handler) createStoryQA(c echo.Context) error {
 			Msg: "unexpected server error",
 		})
 	}
-	if c.Request().Header.Get("Content-Type") == "text/html" {
-		c.Response().Header().Set("HX-Trigger", "qa-reload")
-		return c.HTML(http.StatusOK, "")
-	}
 	return c.JSON(http.StatusOK, ans)
 }
 
