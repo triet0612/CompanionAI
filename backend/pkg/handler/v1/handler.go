@@ -7,6 +7,7 @@ import (
 	"CompanionBackend/pkg/model"
 	"context"
 	"errors"
+	"log"
 	"log/slog"
 	"net/http"
 	"net/mail"
@@ -42,6 +43,7 @@ func (h *Handler) Mount(e *echo.Echo) {
 
 	g.GET("/docs/*", echoSwagger.WrapHandler)
 
+	g.GET("/logout", h.logout)
 	g.POST("/login", h.login)
 	g.POST("/register", h.register)
 
@@ -68,6 +70,7 @@ func (h *Handler) login(c echo.Context) error {
 	}
 	var u body
 	if err := c.Bind(&u); err != nil {
+		log.Println(err)
 		return c.JSON(http.StatusBadRequest, model.APIError{
 			Err: "auth_error",
 			Msg: "field errors",
@@ -133,6 +136,8 @@ func (h *Handler) login(c echo.Context) error {
 		Expires:  time.Now().Add(1000 * time.Hour),
 		Path:     "/",
 		HttpOnly: true,
+		SameSite: http.SameSiteLaxMode,
+		Secure:   true,
 	})
 	return c.JSON(http.StatusOK, "Ok")
 }
@@ -206,4 +211,23 @@ func (h *Handler) register(c echo.Context) error {
 	return c.JSON(http.StatusOK, map[string]string{
 		"message": "success",
 	})
+}
+
+// @Summary      logout
+// @Tags         Authentication
+// @Produce      json
+// @Failure		 200		{object}	string
+// @Failure		 400		{object}	model.APIError
+// @Failure		 404		{object}	model.APIError
+// @Router       /register	[post]
+func (h *Handler) logout(c echo.Context) error {
+	c.SetCookie(&http.Cookie{
+		Name:     "jwt",
+		Expires:  time.Unix(0, 0),
+		Path:     "/",
+		HttpOnly: true,
+		SameSite: http.SameSiteLaxMode,
+		Secure:   true,
+	})
+	return c.JSON(http.StatusOK, "Ok")
 }

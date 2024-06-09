@@ -45,9 +45,6 @@ func (h *Handler) getStoryList(c echo.Context) error {
 		ans = append(ans, temp)
 	}
 	slog.Info(c.Request().Header.Get("Content-Type"))
-	if c.Request().Header.Get("Content-Type") != "application/json" {
-		return c.Render(http.StatusOK, "story_list.html", ans)
-	}
 	return c.JSON(http.StatusOK, ans)
 }
 
@@ -77,10 +74,6 @@ func (h *Handler) createStory(c echo.Context) error {
 			Err: "chat_error",
 			Msg: "unexpected server error",
 		})
-	}
-	if c.Request().Header.Get("Content-Type") != "application/json" {
-		c.Response().Header().Set("HX-Trigger", "story-list")
-		return c.HTML(http.StatusOK, "")
 	}
 	return c.JSON(http.StatusOK, ans)
 }
@@ -126,9 +119,6 @@ GROUP BY s.StoryID`,
 		}
 	}
 	ans.StoryID = id
-	if c.Response().Header().Get("Content-Type") == "" {
-		return c.Render(http.StatusOK, "qa.html", ans)
-	}
 	return c.JSON(http.StatusOK, ans)
 }
 

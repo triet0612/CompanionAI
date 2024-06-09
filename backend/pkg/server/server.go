@@ -24,7 +24,7 @@ func Init(db *db.DBHelper, cfg *config.Config) *Server {
 		Format: "${status} ${method}\turi=${uri}\t${error}\n",
 	}))
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins:     []string{"http://localhost:8000", "http://localhost:5173"},
+		AllowOrigins:     []string{"http://localhost:8000", "http://localhost:5173", "http://localhost:3000"},
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE"},
 		AllowCredentials: true,
 	}))

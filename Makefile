@@ -1,7 +1,6 @@
 ollama_model:
 	ollama run llava-phi3
 
-
 compose_api:
 	docker compose -f docker/api.yml up --build -d
 
